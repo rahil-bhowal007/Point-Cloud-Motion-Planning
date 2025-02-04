@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="simple">
+
+<!-- <robot name="visual"> -->
+
+  <material name="blue">
+    <color rgba="0 0 0.8 1"/>
+  </material>
+  <material name="black">
+    <color rgba="0 0 0 1"/>
+  </material>
+  <material name="red">
+    <color rgba="1 0 0 1"/>
+  </material>
+
+  <xacro:property name="link_length" value="0.4318" />
+  <xacro:property name="dummy_link_length" value="0.1" />
+  <xacro:property name="link_radius" value="0.02" />
+  
+
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <cylinder length="${dummy_link_length}" radius="${link_radius}"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <!-- <collision>
+      <geometry>
+        <cylinder length="0.6" radius="0.2"/>
+      </geometry>
+    </collision> -->
+  </link>
+
+  <link name="dummy_link0">
+    
+    <visual>
+      <origin rpy="${pi/2} 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="${dummy_link_length}" radius="${link_radius}"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <!-- <collision>
+      <geometry>
+        <cylinder length="0.6" radius="0.2"/>
+      </geometry>
+    </collision> -->
+  </link>
+
+  <joint name="shoulder_pivot" type="revolute">
+    <parent link="base_link"/>
+    <child link="dummy_link0"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="1000.0" lower="-${pi/2}" upper="${pi/2}" velocity="1000.0"/>
+  </joint>
+
+  
+  <link name="arm_link0">
+    <visual>
+      <origin rpy="${pi/2} 0 0" xyz="0 ${link_length/2} 0"/>
+      <geometry>
+        <cylinder length="${link_length}" radius="${link_radius}"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <origin rpy="${pi/2} 0 0" xyz="0 ${link_length/2} 0"/>
+      <geometry>
+        <cylinder length="${link_length}" radius="${link_radius}"/>
+      </geometry>
+    </collision>
+
+    <!-- <collision>
+      <geometry>
+        <cylinder length="0.6" radius="0.2"/>
+      </geometry>
+    </collision> -->
+  </link>
+
+  <joint name="shoulder_lift" type="revolute">
+    <parent link="dummy_link0"/>
+    <child link="arm_link0"/>
+    <!-- <origin xyz="0 0 0"/> -->
+    <origin rpy="${pi/2} 0 0" xyz="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="1000.0" lower="-${pi}" upper="${0}" velocity="1000.0"/>
+  </joint>
+
+  <link name="dummy_elbow">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="${dummy_link_length}" radius="${link_radius}"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+  </link>
+
+  <joint name="elbow_0" type="revolute">
+    <parent link="arm_link0"/>
+    <child link="dummy_elbow"/>
+    <!-- <origin xyz="0 0 0"/> -->
+    <origin rpy="-${pi/2} 0 0" xyz="0 ${link_length} 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="1000.0" lower="-${0}" upper="${0}" velocity="1000.0"/>
+  </joint>
+
+  
+  <link name="arm_link1">
+    <visual>
+      <origin rpy="0 ${pi/2} 0" xyz="${link_length/2} 0 0"/>
+      <geometry>
+        <cylinder length="${link_length}" radius="${link_radius}"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <origin rpy="0 ${pi/2} 0" xyz="${link_length/2} 0 0"/>
+      <geometry>
+        <cylinder length="${link_length}" radius="${link_radius}"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+  <joint name="elbow_1" type="revolute">
+    <parent link="dummy_elbow"/>
+    <child link="arm_link1"/>
+    <origin rpy="${pi/2} 0 0" xyz="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="1000.0" lower="-${pi}" upper="${0}" velocity="1000.0"/>
+  </joint>
+
+  <link name="dummy_elbow2">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="${dummy_link_length}" radius="${link_radius}"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+  </link>
+
+  <joint name="dummy_joint_axis" type="fixed">
+    <parent link="arm_link1"/>
+    <child link="dummy_elbow2"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+  </joint>
+
+  <link name="end_effector">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="${link_radius*2} ${link_radius*2} ${link_radius*2}"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+  </link>
+
+  <joint name="dummy_ee" type="fixed">
+    <parent link="arm_link1"/>
+    <child link="end_effector"/>
+    <origin rpy="0 0 0" xyz="${link_length} 0 0"/>
+  </joint>
+
+  
+
+
+  <!-- <link name="arm_link1">
+    <visual>
+      <origin rpy="0 ${pi/2} 0" xyz="${link_length/2} 0 0"/>
+      <geometry>
+        <cylinder length="${link_length}" radius="${link_radius}"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+
+  </link>
+
+  <joint name="elbow" type="revolute">
+    <parent link="arm_link0"/>
+    <child link="arm_link1"/>
+    <origin rpy="0 0 0" xyz="${link_length} 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="1000.0" lower="-${pi}" upper="${pi}" velocity="1000.0"/>
+  </joint> -->
+
+
+
+</robot>
