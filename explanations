@@ -1,0 +1,18 @@
+1
+b)When outliers were introduced in part b, it altered the values of the covariance matrix and mean, 
+potentially shifting the mean away from its central value. 
+This displacement can also impact normal vectors that are not perpendicular to the plane, leading to poor fit of the plane to the data. Consequently, the normal vectors and centers calculated in Q1a may not accurately represent the data containing outliers, resulting in inadequate data fitting in part b. Therefore, to address these outliers, the implementation of RANSAC is necessary.
+c)
+Strengths:
+Effective for data sets containing outliers.
+Can be used to fit various geometric models
+
+Weakness:
+Needs tuning of hyperparameters such as iterations and epsilon. Not proper tuning may lead to undesirable results.
+Computationally expensive.
+
+
+3f) Number of inliers: 16740
+
+4)
+b)When Gaussian noise is applied to one of the point clouds, it shifts the positions of the points while preserving their correspondence with the other cloud. This allows the transformation matrix to successfully align the two point clouds. However, when dealing with shuffled data, where the order of data points is altered, the correspondence between the clouds is not preserved. This results to the transformation matrix not able to accurately adjust and align the two shuffled point clouds.
